@@ -35,7 +35,7 @@ const CompanionSession = async ({ params }: CompanionSessionPageProps) => {
           </div>
         </div>
         <div className="items-start text-2xl max-md:hidden">
-          {companion.duration} minutes
+          {companion.duration} {companion.duration === 1 ? 'minute' : 'minutes'}
         </div>
       </article>
 

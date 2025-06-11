@@ -28,6 +28,7 @@ const Page = async () => {
           title="Recently completed sessions"
           companions={recentSessionsCompanions}
           classNames="w-2/3 max-lg:w-full"
+          slice={6}
         />
         <CTA />
       </section>

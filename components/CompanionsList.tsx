@@ -16,8 +16,9 @@ interface CompanionsListProps {
   title: string;
   companions?: Companion[];
   classNames?: string;
+  slice?: number;
 }
-const CompanionsList = ({ title, companions, classNames }: CompanionsListProps) => {
+const CompanionsList = ({ title, companions, classNames, slice }: CompanionsListProps) => {
   return (
     <article className={cn(classNames, "companion-list")}>
         <h2 className="font-bold text-2xl">{title}</h2>
@@ -31,7 +32,7 @@ const CompanionsList = ({ title, companions, classNames }: CompanionsListProps) 
                 </TableRow>
             </TableHeader>
             <TableBody >
-                {companions?.slice(0, 6).map(({ id, subject, name, topic, duration }, index) => (
+                {companions?.slice(0, slice).map(({ id, subject, name, topic, duration }, index) => (
                 <TableRow key={id+index}>
                     <TableCell>
                         <Link className="cursor-pointer" href={`/companions/${id}`}>
