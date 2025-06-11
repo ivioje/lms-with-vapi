@@ -7,7 +7,7 @@ const NewCompanion = async () => {
   if(!userId) redirect("/sign-in");
 
   return (
-    <main className="min-lg:w-1/3 min-md:w-2/3 items-center justify-center mb-4">
+    <main className="min-lg:w-1/3 min-md:w-2/3 min-h-screen items-center justify-center my-8">
       <article className="w-full gap-4 flex flex-col">
         <h1>Companion Builder</h1>
         <CompanionForm />
