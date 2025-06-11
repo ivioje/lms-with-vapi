@@ -7,11 +7,13 @@ const NewCompanion = async () => {
   if(!userId) redirect("/sign-in");
 
   return (
-    <main className="min-lg:w-1/3 min-md:w-2/3 min-h-screen items-center justify-center my-8">
+    <main className="min-h-screen items-center justify-center mb-8 -mt-2" style={{ backgroundImage: "url('/images/pattern.png')", backgroundSize: "cover", backgroundRepeat: "no-repeat", backgroundPosition: "center" }}>
+    <div className="min-lg:w-2/4 min-md:w-10/12">
       <article className="w-full gap-4 flex flex-col">
         <h1>Companion Builder</h1>
         <CompanionForm />
       </article>
+    </div>
     </main>
   )
 }

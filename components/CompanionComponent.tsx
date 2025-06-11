@@ -152,8 +152,8 @@ const CompanionComponent = ({ companionId, subject, topic, name, userName, userI
                 </div>
             </section>
 
-            <section className="transcript min-h-[30vh] bg-gray-100 p-3">
-                <div className="transcript-message no-scrollbar">
+            <section className="transcript bg-gray-100 p-2 min-h-[40vh]">
+                <div className="transcript-message no-scrollbar h-full">
                     {messages.map((message, index) => {
                         console.log('message:', message);
                         if(message.role === 'assistant') {
@@ -163,8 +163,8 @@ const CompanionComponent = ({ companionId, subject, topic, name, userName, userI
                                 </p>
                             )
                         } else {
-                           return <p key={index} className="max-sm:text-sm text-[#E94E77]">
-                                <b>{userName}:</b> {message.content}
+                            return <p key={index} className="max-sm:text-sm">
+                                    {userName}: {message.content}
                             </p>
                         }
                     })}

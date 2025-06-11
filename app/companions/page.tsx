@@ -14,7 +14,7 @@ const CompanionsLibrary = async ({ searchParams }: SearchParams) => {
 
   console.log("params", companions);
   return (
-    <main>
+    <main className="min-h-screen pb-6">
       <section className="flex justify-between gap-4 max-sm:flex-col">
         <h1>Companion Library</h1>
         <div className="gap-4">

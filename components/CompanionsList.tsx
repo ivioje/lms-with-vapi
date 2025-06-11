@@ -20,7 +20,7 @@ interface CompanionsListProps {
 const CompanionsList = ({ title, companions, classNames }: CompanionsListProps) => {
   return (
     <article className={cn(classNames, "companion-list")}>
-        <h2 className="font-bold text-3xl">{title}</h2>
+        <h2 className="font-bold text-2xl">{title}</h2>
 
         <Table>
             <TableHeader>
@@ -31,26 +31,26 @@ const CompanionsList = ({ title, companions, classNames }: CompanionsListProps) 
                 </TableRow>
             </TableHeader>
             <TableBody >
-                {companions?.map(({ id, subject, name, topic, duration }) => (
-                <TableRow key={id}>
+                {companions?.slice(0, 6).map(({ id, subject, name, topic, duration }, index) => (
+                <TableRow key={id+index}>
                     <TableCell>
                         <Link className="cursor-pointer" href={`/companions/${id}`}>
                         {subject}
                         <div className="flex items-center gap-2">
-                            <div className="size-[72px] flex items-center justify-center rounded-lg max-md:hidden"
+                            <div className="size-[60px] flex items-center justify-center rounded-lg max-md:hidden"
                             style={{ backgroundColor : getSubjectColor(subject) }}>
                                 <Image
                                 src={`/icons/${subject}.svg`}
                                 alt={subject}
-                                width={35}
-                                height={35}
+                                width={32}
+                                height={32}
                             />
                             </div>
                             <div className="flex flex-col gap-2">
-                                <p className="font-bold text-2xl">
+                                <p className="font-bold text-xl">
                                     {name}
                                 </p>
-                                <p className="text-lg">
+                                <p className="text-base">
                                     {topic}
                                 </p>
                             </div>
@@ -73,9 +73,9 @@ const CompanionsList = ({ title, companions, classNames }: CompanionsListProps) 
                     </TableCell>
                     <TableCell>
                         <div className="flex items-center gap-2 w-full">
-                            <p className="text-2xl">
-                                {duration} {' '}
-                                <span className="max-md:hidden">mins</span>
+                            <p className="text-xl">
+                                {duration}
+                                <span className="max-md:hidden">{duration <= 1 ? ' min' : ' mins'}</span>
                             </p>
                             <Image
                                 src="/icons/clock.svg"
