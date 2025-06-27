@@ -16,13 +16,27 @@ enum CallStatus {
     FINISHED = 'FINISHED',
 }
 
-const CompanionComponent = ({ companionId, subject, topic, name, userName, userImage, style, voice }: CompanionComponentProps) => {
+const CompanionComponent = ({ companionId, subject, topic, name, userName, userImage, style, voice, companionDuration }: CompanionComponentProps) => {
     const [callStatus, setCallStatus] = useState<CallStatus>(CallStatus.INACTIVE);
     const [isSpeaking, setIsSpeaking] = useState(false);
     const [isMuted, setIsMuted] = useState(false);
     const [messages, setMessages] = useState<SavedMessage[]>([]);
+    const [timeLeft, setTimeLeft] = useState(companionDuration * 60);
 
     const lottieRef = useRef<LottieRefCurrentProps>(null);
+    const transcriptEndRef = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+        if (callStatus === CallStatus.ACTIVE && timeLeft > 0) {
+            const timer = setInterval(() => {
+                setTimeLeft(prevTime => prevTime - 1);
+            }, 1000);
+
+            return () => clearInterval(timer);
+        } else if (timeLeft === 0 && callStatus === CallStatus.ACTIVE) {
+            handleDisconnect();
+        }
+    }, [callStatus, timeLeft]);
 
     useEffect(() => {
         if(lottieRef) {
@@ -33,6 +47,10 @@ const CompanionComponent = ({ companionId, subject, topic, name, userName, userI
             }
         }
     }, [isSpeaking, lottieRef])
+
+    useEffect(() => {
+        transcriptEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    }, [messages])
 
     useEffect(() => {
         const onCallStart = () => {
@@ -89,7 +107,7 @@ const CompanionComponent = ({ companionId, subject, topic, name, userName, userI
             serverMessages: [],
         }
 
-        vapi.start(configureAssistant(voice, style), assistantOverrides)
+        vapi.start(configureAssistant(voice, style), (assistantOverrides as any))
     }
 
     const handleDisconnect = () => {
@@ -97,8 +115,14 @@ const CompanionComponent = ({ companionId, subject, topic, name, userName, userI
         vapi.stop()
     }
 
+    const formatTime = (seconds: number) => {
+        const minutes = Math.floor(seconds / 60);
+        const remainingSeconds = seconds % 60;
+        return `${minutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`;
+    };
+
     return (
-        <section className="flex flex-col h-[70vh]">
+        <section className="flex flex-col h-[80vh] w-full">
             <section className="flex gap-8 max-sm:flex-col">
                 <div className="companion-section">
                     <div className="companion-avatar" style={{ backgroundColor: getSubjectColor(subject)}}>
@@ -124,21 +148,6 @@ const CompanionComponent = ({ companionId, subject, topic, name, userName, userI
                         </div>
                     </div>
                     <p className="font-bold text-2xl">{name}</p>
-                </div>
-
-                <div className="user-section">
-                    <div className="user-avatar">
-                        <Image src={userImage} alt={userName} width={130} height={130} className="rounded-lg" />
-                        <p className="font-bold text-2xl">
-                            {userName}
-                        </p>
-                    </div>
-                    <button className="btn-mic disabled:opacity-50 disabled:cursor-not-allowed" onClick={toggleMicrophone} disabled={callStatus !== CallStatus.ACTIVE}>
-                        <Image src={isMuted ? '/icons/mic-off.svg' : '/icons/mic-on.svg'} alt="mic" width={36} height={36} />
-                        <p className="max-sm:hidden">
-                            {isMuted ? 'Turn on microphone' : 'Turn off microphone'}
-                        </p>
-                    </button>
                     <button className={cn(
                             'rounded-lg py-2 cursor-pointer transition-colors w-full text-white', 
                             callStatus ===CallStatus.ACTIVE ? 'bg-red-700' : 'bg-primary', 
@@ -153,28 +162,62 @@ const CompanionComponent = ({ companionId, subject, topic, name, userName, userI
                         }
                     </button>
                 </div>
+
+                <div className="user-section">
+                    <div className="user-avatar">
+                        <Image src={userImage} alt={userName} width={130} height={130} className="rounded-lg" />
+                        <p className="font-bold text-2xl">
+                            {userName}
+                        </p>
+                    </div>
+                    <div className='flex items-center gap-4 w-full'>
+                        <button className="btn-mic disabled:opacity-50 disabled:cursor-not-allowed" onClick={toggleMicrophone} disabled={callStatus !== CallStatus.ACTIVE}>
+                            <Image src={isMuted ? '/icons/mic-off.svg' : '/icons/mic-on.svg'} alt="mic" width={36} height={36} />
+                            <p className="max-sm:hidden">
+                                {isMuted ? 'Turn on microphone' : 'Turn off microphone'}
+                            </p>
+                        </button>
+                        <div className='flex flex-col gap-2 w-full'>
+                            <div className="flex items-center justify-center gap-2 font-bold text-xl">
+                                <Image src="/icons/clock.svg" alt="clock" width={20} height={20} />
+                                {formatTime(timeLeft)}
+                            </div>
+                            <button className={cn(
+                                'rounded-lg py-2 cursor-pointer transition-colors w-full text-white', 
+                                callStatus ===CallStatus.ACTIVE ? 'bg-red-700' : 'bg-primary', 
+                                callStatus === CallStatus.CONNECTING && 'animate-pulse')} 
+                                onClick={callStatus === CallStatus.ACTIVE ? handleDisconnect : handleCall}
+                            >
+                            {callStatus === CallStatus.ACTIVE
+                            ? "End Session"
+                            : callStatus === CallStatus.CONNECTING
+                                ? 'Connecting'
+                            : 'Start Session'
+                            }
+                        </button>
+                        </div>
+                    </div>
+                </div>
             </section>
 
             {messages.length > 0 &&
-            <section className="transcript bg-gray-100 p-2 min-h-[40vh]">
-                <div className="transcript-message no-scrollbar h-full">
+            <section className="flex-grow transcript bg-gray-100 p-4 rounded-lg mt-8 overflow-hidden">
+                <div className="transcript-message h-full overflow-y-auto pr-2">
                     {messages.map((message, index) => {
-                        console.log('message:', message);
                         if(message.role === 'assistant') {
                             return (
-                                <p key={index} className="max-sm:text-sm">
+                                <p key={index} className="max-sm:text-sm mb-3">
                                     <b>{name.split(' ')[0].replace(/[.,]/g, '')}:</b> {message.content}
                                 </p>
                             )
                         } else {
-                            return <p key={index} className="max-sm:text-sm">
-                                    {userName}: {message.content}
+                            return <p key={index} className="max-sm:text-sm mb-3">
+                                    <b>{userName}:</b> {message.content}
                             </p>
                         }
                     })}
+                    <div ref={transcriptEndRef} />
                 </div>
-
-                <div className="transcript-fade" />
             </section>
             }
         </section>
