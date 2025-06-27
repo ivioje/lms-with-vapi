@@ -1,7 +1,7 @@
 import CompanionCard from "@/components/companionCard";
 import SearchInput from "@/components/SearchInput";
 import SubjectFilter from "@/components/SubjectFilter";
-import { getAllCompanions, getBookmarkedCompanions } from "@/lib/actions/companion.actions";
+import { getUserCompanions, getBookmarkedCompanions } from "@/lib/actions/companion.actions";
 import { getSubjectColor } from "@/lib/utils";
 import { SearchParams } from "@/types"
 import { currentUser } from "@clerk/nextjs/server";
@@ -13,9 +13,18 @@ const CompanionsLibrary = async ({ searchParams }: SearchParams) => {
   const subject = filters.subject ? filters.subject : '';
   const topic = filters.topic ? filters.topic : '';
 
-  const companions = await getAllCompanions({ subject, topic })
   const user = await currentUser();
   if (!user) redirect("/sign-in");
+
+  // Fetch only the companions created by the logged-in user
+  const userCompanions = await getUserCompanions(user.id);
+
+  // Apply subject/topic filters locally
+  const companions = userCompanions.filter((c) => {
+    const subjectMatch = subject ? c.subject.toLowerCase().includes(String(subject).toLowerCase()) : true;
+    const topicMatch = topic ? (c.topic?.toLowerCase().includes(String(topic).toLowerCase()) || c.name?.toLowerCase().includes(String(topic).toLowerCase())) : true;
+    return subjectMatch && topicMatch;
+  });
 
   const bookmarkedCompanions = user ? await getBookmarkedCompanions(user.id) : [];
   const bookmarkedIds = new Set(bookmarkedCompanions.map((c) => c.id));
