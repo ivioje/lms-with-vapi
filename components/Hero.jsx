@@ -1,7 +1,10 @@
 import { Button } from "@/components/ui/button"
+import { currentUser } from "@clerk/nextjs/server";
 import Link from "next/link";
 
-const HeroSection = () => {
+const HeroSection = async () => {
+  const user = await currentUser()
+  
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
       {/* Background Image */}
@@ -48,9 +51,15 @@ const HeroSection = () => {
               size="lg"
               className="bg-gradient-to-r from-orange-500 to-pink-500 hover:from-orange-600 hover:to-pink-600 text-white font-bold text-xl px-12 py-6 rounded-full shadow-2xl transform hover:scale-105 transition-all duration-300 border-0 cursor-pointer"
             >
-              <Link href="/sign-up">
-                Start Learning
-              </Link>
+              {user ? (
+                <Link href="/my-journey">
+                  My Journey
+                </Link>
+              ) : (
+                <Link href="/sign-up">
+                  Start Learning
+                </Link>
+              )}
             </Button>
           </div>
 
