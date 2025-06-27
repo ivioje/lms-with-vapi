@@ -5,6 +5,7 @@ import { addBookmark, removeBookmark } from "@/lib/actions/companion.actions";
 import Image from "next/image";
 import Link from "next/link";
 import { Loader2, X } from "lucide-react";
+import toast from "react-hot-toast";
 
 interface CompanionCardProps {
   id: string;
@@ -13,17 +14,19 @@ interface CompanionCardProps {
   subject?: string;
   duration: number;
   color: string;
+  initialBookmarked?: boolean;
 }
 
-const CompanionCard = ({ id, name, topic, duration, subject, color }: CompanionCardProps) => {
+const CompanionCard = ({ id, name, topic, duration, subject, color, initialBookmarked }: CompanionCardProps) => {
   const path = `/companions/${id}`;
   const [bookmarking, setBookmarking] = useState(false);
-  const [isBookmarked, setIsBookmarked] = useState(false);
+  const [isBookmarked, setIsBookmarked] = useState(initialBookmarked || false);
 
   const handleBookmark = async () => {
     setBookmarking(true);
     try {
       await addBookmark(id, path);
+      toast.success('Companion added to bookmarks');
       setIsBookmarked(true);
     } catch (e) {
         console.error("Failed to bookmark companion:", e);
@@ -35,6 +38,7 @@ const CompanionCard = ({ id, name, topic, duration, subject, color }: CompanionC
     setBookmarking(true);
     try {
       await removeBookmark(id, path);
+      toast.success('Companion removed from bookmarks');
       setIsBookmarked(false);
     } catch (e) {
         console.error("Failed to remove bookmark:", e);

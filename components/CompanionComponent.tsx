@@ -17,6 +17,7 @@ enum CallStatus {
     FINISHED = 'FINISHED',
 }
 
+
 const CompanionComponent = ({ companionId, subject, topic, name, userName, userImage, style, voice, companionDuration }: CompanionComponentProps) => {
     const [callStatus, setCallStatus] = useState<CallStatus>(CallStatus.INACTIVE);
     const [isSpeaking, setIsSpeaking] = useState(false);
@@ -95,7 +96,7 @@ const CompanionComponent = ({ companionId, subject, topic, name, userName, userI
             vapi.off('speech-start', onSpeechStart);
             vapi.off('speech-end', onSpeechEnd);
         }
-    }, [companionId, messages]);
+    }, [companionId, messages, companionDuration]);
 
     const toggleMicrophone = () => {
         const isMuted = vapi.isMuted();
@@ -112,7 +113,8 @@ const CompanionComponent = ({ companionId, subject, topic, name, userName, userI
             serverMessages: [],
         }
 
-        vapi.start(configureAssistant(voice, style), (assistantOverrides as any))
+        // @ts-ignore
+        vapi.start(configureAssistant(voice, style), assistantOverrides)
     }
 
     const handleDisconnect = () => {

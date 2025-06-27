@@ -1,4 +1,3 @@
-import AuthGuard from "@/app/middleware/AuthGuard";
 import CompanionComponent from "@/components/CompanionComponent";
 import { getCompanion } from "@/lib/actions/companion.actions";
 import { getSubjectColor } from "@/lib/utils";
@@ -41,7 +40,7 @@ const CompanionSession = async ({ params }: CompanionSessionPageProps) => {
         </div>
       </article>
 
-      <CompanionComponent {...companion} companionDuration={companion.duration} companionId={id} userName={user?.firstName!} userImage={user?.imageUrl!} />
+      <CompanionComponent {...companion} companionDuration={companion.duration} companionId={id} userName={user.firstName!} userImage={user.imageUrl!} />
     </main>
     </>
   )

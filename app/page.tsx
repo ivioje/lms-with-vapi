@@ -2,7 +2,7 @@ import CompanionCard from '@/components/companionCard'
 import CompanionsList from '@/components/CompanionsList'
 import HeroSection from '@/components/Hero.jsx'
 import CTA from '@/components/CTA'
-import { getUserCompanions, getUserSessions } from '@/lib/actions/companion.actions'
+import { getUserCompanions, getUserSessions, getBookmarkedCompanions } from '@/lib/actions/companion.actions'
 import { getSubjectColor } from '@/lib/utils'
 import React from 'react'
 import { auth } from '@clerk/nextjs/server'
@@ -14,6 +14,8 @@ const Page = async () => {
   // Fetch user-specific data only if the user is logged in
   const companions = userId ? await getUserCompanions(userId) : [];
   const recentSessionsCompanions = userId ? await getUserSessions(userId, 10) : [];
+  const bookmarkedCompanions = userId ? await getBookmarkedCompanions(userId) : [];
+  const bookmarkedIds = new Set(bookmarkedCompanions.map((c: any) => c.id));
 
   return (
     <>
@@ -35,10 +37,11 @@ const Page = async () => {
                 key={companion.id}
                 { ...companion }
                 color={getSubjectColor(companion.subject)}
+                initialBookmarked={bookmarkedIds.has(companion.id)}
               />
             ))
           ) : (
-            <p className='text-center w-full'>You don't have any companions yet.</p>
+            <p className='text-center w-full'>You don&apos;t have any companions yet.</p>
           )
         ) : (
           <p className='text-center w-full'>

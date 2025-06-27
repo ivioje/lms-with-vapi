@@ -1,4 +1,3 @@
-import AuthGuard from "@/app/middleware/AuthGuard";
 import CompanionForm from "@/components/CompanionForm"
 import { newCompanionPermissions } from "@/lib/actions/companion.actions";
 import { currentUser } from "@clerk/nextjs/server";

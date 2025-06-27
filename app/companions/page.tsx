@@ -1,7 +1,7 @@
 import CompanionCard from "@/components/companionCard";
 import SearchInput from "@/components/SearchInput";
 import SubjectFilter from "@/components/SubjectFilter";
-import { getAllCompanions } from "@/lib/actions/companion.actions";
+import { getAllCompanions, getBookmarkedCompanions } from "@/lib/actions/companion.actions";
 import { getSubjectColor } from "@/lib/utils";
 import { SearchParams } from "@/types"
 import { currentUser } from "@clerk/nextjs/server";
@@ -17,6 +17,8 @@ const CompanionsLibrary = async ({ searchParams }: SearchParams) => {
   const user = await currentUser();
   if (!user) redirect("/sign-in");
 
+  const bookmarkedCompanions = user ? await getBookmarkedCompanions(user.id) : [];
+  const bookmarkedIds = new Set(bookmarkedCompanions.map((c: any) => c.id));
   const authorised = true;
 
   return (
@@ -36,6 +38,7 @@ const CompanionsLibrary = async ({ searchParams }: SearchParams) => {
             key={companion.id} 
             {...companion} 
             color={getSubjectColor(companion.subject)}
+            initialBookmarked={bookmarkedIds.has(companion.id)}
           />
         ))}
       </section>
