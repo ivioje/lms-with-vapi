@@ -16,7 +16,7 @@ const CompanionsLibrary = async ({ searchParams }: SearchParams) => {
   const companions = await getAllCompanions({ subject, topic })
   const user = await currentUser();
   if (!user) redirect("/sign-in");
-  
+
   const authorised = true;
 
   return (
@@ -25,7 +25,7 @@ const CompanionsLibrary = async ({ searchParams }: SearchParams) => {
     <main className="min-h-screen pb-6">
       <section className="flex justify-between gap-4 max-sm:flex-col">
         <h1>Companion Library</h1>
-        <div className="gap-4">
+        <div className="gap-4 flex md:flex-row flex-col items-center">
           <SearchInput />
           <SubjectFilter />
         </div>
