@@ -1,3 +1,4 @@
+import AuthGuard from "@/app/middleware/AuthGuard";
 import CompanionComponent from "@/components/CompanionComponent";
 import { getCompanion } from "@/lib/actions/companion.actions";
 import { getSubjectColor } from "@/lib/utils";
@@ -14,10 +15,11 @@ const CompanionSession = async ({ params }: CompanionSessionPageProps) => {
   const companion = await getCompanion(id);
   const user = await currentUser();
 
-  if(!user) redirect("/sign-in");
+  if (!user) redirect("/sign-in");
   if(!companion) redirect("/companions");
 
   return (
+    <>
     <main>
       <article className="flex rounded-border justify-between p-6 max-md:flex-col">
         <div className="flex items-center gap-2">
@@ -39,8 +41,9 @@ const CompanionSession = async ({ params }: CompanionSessionPageProps) => {
         </div>
       </article>
 
-      <CompanionComponent {...companion} companionId={id} userName={user.firstName!} userImage={user.imageUrl!} />
+      <CompanionComponent {...companion} companionId={id} userName={user?.firstName!} userImage={user?.imageUrl!} />
     </main>
+    </>
   )
 }
 

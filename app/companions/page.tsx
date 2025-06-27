@@ -4,6 +4,9 @@ import SubjectFilter from "@/components/SubjectFilter";
 import { getAllCompanions } from "@/lib/actions/companion.actions";
 import { getSubjectColor } from "@/lib/utils";
 import { SearchParams } from "@/types"
+import { currentUser } from "@clerk/nextjs/server";
+import AuthGuard from "../middleware/AuthGuard";
+import { redirect } from "next/navigation";
 
 const CompanionsLibrary = async ({ searchParams }: SearchParams) => {
   const filters = await searchParams;
@@ -11,9 +14,14 @@ const CompanionsLibrary = async ({ searchParams }: SearchParams) => {
   const topic = filters.topic ? filters.topic : '';
 
   const companions = await getAllCompanions({ subject, topic })
+  const user = await currentUser();
+  if (!user) redirect("/sign-in");
+  
+  const authorised = true;
 
-  console.log("params", companions);
   return (
+    <>
+    <AuthGuard authorised={authorised} />
     <main className="min-h-screen pb-6">
       <section className="flex justify-between gap-4 max-sm:flex-col">
         <h1>Companion Library</h1>
@@ -32,6 +40,7 @@ const CompanionsLibrary = async ({ searchParams }: SearchParams) => {
         ))}
       </section>
     </main>
+    </>
   )
 }
 

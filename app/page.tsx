@@ -2,37 +2,53 @@ import CompanionCard from '@/components/companionCard'
 import CompanionsList from '@/components/CompanionsList'
 import HeroSection from '@/components/Hero.jsx'
 import CTA from '@/components/CTA'
-import { getAllCompanions, getRecentSessions } from '@/lib/actions/companion.actions'
+import { getUserCompanions, getUserSessions } from '@/lib/actions/companion.actions'
 import { getSubjectColor } from '@/lib/utils'
 import React from 'react'
+import { auth } from '@clerk/nextjs/server'
+import Link from 'next/link'
 
 const Page = async () => {
-  const companions = await getAllCompanions({ limit: 3 });
-  const recentSessionsCompanions = await getRecentSessions(10)
+  const { userId } = await auth();
+
+  // Fetch user-specific data only if the user is logged in
+  const companions = userId ? await getUserCompanions(userId) : [];
+  const recentSessionsCompanions = userId ? await getUserSessions(userId, 10) : [];
+
   return (
     <>
     <HeroSection />
     <main className='pb-12'>
-      <h1 className='text-2xl underline'>Popular Companions</h1>
-      <section className='home-section'>
-        {
-          companions.map((companion) => (
-            <CompanionCard
-              key={companion.id}
-              { ...companion }
-              color={getSubjectColor(companion.subject)}
-            />
-          ))
-         }
+      <h1 className='text-2xl underline text-center'>My Companions</h1>
+      <section className='home-section pb-8'>
+        {userId ? (
+          companions.length ? (
+            companions.map((companion) => (
+              <CompanionCard
+                key={companion.id}
+                { ...companion }
+                color={getSubjectColor(companion.subject)}
+              />
+            ))
+          ) : (
+            <p className='text-center w-full'>You don't have any companions yet.</p>
+          )
+        ) : (
+          <p className='text-center w-full'>
+            <Link href="/sign-in" className='underline'>Log in </Link> 
+            to view your companions</p>
+        )}
       </section>
 
-      <section className='home-section'>
-        <CompanionsList 
-          title="Recently completed sessions"
-          companions={recentSessionsCompanions}
-          classNames="w-2/3 max-lg:w-full"
-          slice={6}
-        />
+      <section className='home-section flex justify-center'>
+        {userId && recentSessionsCompanions.length > 0 && (
+          <CompanionsList
+            title="Recently completed sessions"
+            companions={recentSessionsCompanions}
+            classNames="w-2/3 max-lg:w-full"
+            slice={6}
+          />
+        )}
         <CTA />
       </section>
     </main>

@@ -1,29 +1,25 @@
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/components/ui/accordion";
+import {Accordion, AccordionContent, AccordionItem, AccordionTrigger} from "@/components/ui/accordion";
 import { currentUser } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
-import {
-  getUserCompanions,
-  getUserSessions,
-  getBookmarkedCompanions,
-} from "@/lib/actions/companion.actions";
+import { getUserCompanions, getUserSessions, getBookmarkedCompanions } from "@/lib/actions/companion.actions";
 import Image from "next/image";
 import CompanionsList from "@/components/CompanionsList";
+import AuthGuard from "../middleware/AuthGuard";
 
 const Profile = async () => {
   const user = await currentUser();
+  if (!user) {
+    redirect('/sign-in');
+  }
 
-  if (!user) redirect("/sign-in");
-
+  const authorised = !!user;
   const companions = await getUserCompanions(user.id);
   const sessionHistory = await getUserSessions(user.id);
   const bookmarkedCompanions = await getBookmarkedCompanions(user.id);
 
   return (
+    <>
+    <AuthGuard authorised={authorised} />
     <main className="min-lg:w-3/4">
       <section className="flex justify-between gap-4 max-sm:flex-col items-center">
         <div className="flex gap-4 items-center">
@@ -97,6 +93,7 @@ const Profile = async () => {
         </AccordionItem>
       </Accordion>
     </main>
+    </>
   );
 };
 export default Profile;

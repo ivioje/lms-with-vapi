@@ -23,18 +23,19 @@ const CompanionsList = ({ title, companions, classNames, slice }: CompanionsList
     <article className={cn(classNames, "companion-list")}>
         <h2 className="font-bold text-2xl">{title}</h2>
 
-        <Table>
-            <TableHeader>
-                <TableRow>
-                <TableHead className="text-lg w-2/3">Lessons</TableHead>
-                <TableHead className="text-lg">Subject</TableHead>
-                <TableHead className="text-lg text-right">Duration</TableHead>
-                </TableRow>
+        {companions?.length ? (
+            <Table>
+                <TableHeader>
+                    <TableRow>
+                    <TableHead className="text-lg w-2/3">Lessons</TableHead>
+                    <TableHead className="text-lg">Subject</TableHead>
+                    <TableHead className="text-lg text-right">Duration</TableHead>
+                    </TableRow>
             </TableHeader>
             <TableBody >
                 {companions?.slice(0, slice).map(({ id, subject, name, topic, duration }, index) => (
-                <TableRow key={id+index}>
-                    <TableCell>
+                    <TableRow key={id+index}>
+                        <TableCell>
                         <Link className="cursor-pointer" href={`/companions/${id}`}>
                         {subject}
                         <div className="flex items-center gap-2">
@@ -90,6 +91,9 @@ const CompanionsList = ({ title, companions, classNames, slice }: CompanionsList
                 ))}
             </TableBody>
         </Table>
+        ) : (<p className="py-5">No {title} found</p>)
+        }
+        
     </article>
   )
 }

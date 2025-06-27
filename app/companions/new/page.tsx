@@ -1,17 +1,19 @@
+import AuthGuard from "@/app/middleware/AuthGuard";
 import CompanionForm from "@/components/CompanionForm"
 import { newCompanionPermissions } from "@/lib/actions/companion.actions";
-import { auth } from "@clerk/nextjs/server"
+import { currentUser } from "@clerk/nextjs/server";
 import Image from "next/image";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 
-const NewCompanion = async () => {
-  const { userId } = await auth();
-  if(!userId) redirect("/sign-in");
 
+const NewCompanion = async () => {
   const canCreateCompanion = await newCompanionPermissions();
+  const user = await currentUser();
+  if (!user) redirect("/sign-in");
 
   return (
+    <>
     <main className="min-h-screen items-center justify-center mb-8 -mt-2" style={{ backgroundImage: "url('/images/pattern.png')", backgroundSize: "cover", backgroundRepeat: "no-repeat", backgroundPosition: "center" }}>
     <div className="min-lg:w-2/4 min-md:w-10/12">
       {canCreateCompanion ? (
@@ -32,6 +34,7 @@ const NewCompanion = async () => {
     )}
     </div>
     </main>
+    </>
   )
 }
 

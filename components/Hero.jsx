@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/button"
+import Link from "next/link";
 
 const HeroSection = () => {
   return (
@@ -16,7 +17,7 @@ const HeroSection = () => {
           backgroundImage: `url('/images/hero-bg.png')`,
         }}
       ></div>
-        <div className="absolute inset-0 bg-gradient-to-br from-blue-600/80 via-purple-600/70 to-pink-500/80"></div>
+        <div className="absolute inset-0 bg-gradient-to-br from-blue-400/80 via-purple-500/70 to-pink-400/80"></div>
       </div>
 
       {/* Content */}
@@ -45,9 +46,11 @@ const HeroSection = () => {
           <div className="pt-4">
             <Button
               size="lg"
-              className="bg-gradient-to-r from-orange-500 to-pink-500 hover:from-orange-600 hover:to-pink-600 text-white font-bold text-xl px-12 py-6 rounded-full shadow-2xl transform hover:scale-105 transition-all duration-300 border-0"
+              className="bg-gradient-to-r from-orange-500 to-pink-500 hover:from-orange-600 hover:to-pink-600 text-white font-bold text-xl px-12 py-6 rounded-full shadow-2xl transform hover:scale-105 transition-all duration-300 border-0 cursor-pointer"
             >
-              Start Learning
+              <Link href="/sign-up">
+                Start Learning
+              </Link>
             </Button>
           </div>
 
@@ -63,7 +66,7 @@ const HeroSection = () => {
             </div>
             <div className="hidden sm:flex items-center space-x-2 text-white/70">
               <div className="w-3 h-3 bg-blue-400 rounded-full animate-pulse delay-200"></div>
-              <span className="text-sm font-medium">Fun Learning</span>
+              <span className="text-sm font-medium">Learn in any Language</span>
             </div>
           </div>
         </div>
