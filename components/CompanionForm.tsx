@@ -160,7 +160,7 @@ const CompanionForm = () => {
         />
         <Button disabled={!form.formState.isValid || building} type="submit" className={`w-full cursor-pointer disabled:opacity-70 disabled:cursor-not-allowed flex items-center`}>
           {!building && 'Build Your Companion'}
-          { building && <span>Building <Loader2 className="animate-spin" /></span> }
+          { building && <span className="flex items-center gap-2">Building <Loader2 className="animate-spin" /></span> }
         </Button>
       </form>
     </Form>

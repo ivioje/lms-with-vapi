@@ -8,6 +8,7 @@ import Lottie, {LottieRefCurrentProps} from "lottie-react";
 import soundwaves from '@/constants/soundwaves.json'
 import { CompanionComponentProps, SavedMessage } from '@/types';
 import {addToSessionHistory} from "@/lib/actions/companion.actions";
+import toast from 'react-hot-toast';
 
 enum CallStatus {
     INACTIVE = 'INACTIVE',
@@ -54,12 +55,16 @@ const CompanionComponent = ({ companionId, subject, topic, name, userName, userI
 
     useEffect(() => {
         const onCallStart = () => {
+            toast.success('Session started')
+            setTimeLeft(companionDuration * 60);
             setCallStatus(CallStatus.ACTIVE);
         }
 
         const onCallEnd = () => {
+            toast.success('Session ended')
             setCallStatus(CallStatus.FINISHED);
             addToSessionHistory(companionId)
+            setTimeLeft(0);
         }
 
         const onMessage = (message: Message) => {
