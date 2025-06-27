@@ -172,7 +172,7 @@ export const removeBookmark = async (companionId: string, path: string) => {
   return data;
 };
 
-export const getBookmarkedCompanions = async (userId: string) => {
+export const getBookmarkedCompanions = async (userId: string): Promise<Array<{ id: string }>> => {
   const supabase = createSupabaseClient();
   const { data, error } = await supabase
     .from("bookmarks")
@@ -181,5 +181,5 @@ export const getBookmarkedCompanions = async (userId: string) => {
   if (error) {
     throw new Error(error.message);
   }
-  return data.map(({ companions }) => companions);
+  return data.map(({ companions }) => companions as unknown as { id: string });
 };

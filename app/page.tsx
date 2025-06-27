@@ -15,7 +15,7 @@ const Page = async () => {
   const companions = userId ? await getUserCompanions(userId) : [];
   const recentSessionsCompanions = userId ? await getUserSessions(userId, 10) : [];
   const bookmarkedCompanions = userId ? await getBookmarkedCompanions(userId) : [];
-  const bookmarkedIds = new Set(bookmarkedCompanions.map((c: any) => c.id));
+  const bookmarkedIds = new Set(bookmarkedCompanions.map((c) => c.id));
 
   return (
     <>

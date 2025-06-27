@@ -18,7 +18,7 @@ const CompanionsLibrary = async ({ searchParams }: SearchParams) => {
   if (!user) redirect("/sign-in");
 
   const bookmarkedCompanions = user ? await getBookmarkedCompanions(user.id) : [];
-  const bookmarkedIds = new Set(bookmarkedCompanions.map((c: any) => c.id));
+  const bookmarkedIds = new Set(bookmarkedCompanions.map((c) => c.id));
   const authorised = true;
 
   return (
