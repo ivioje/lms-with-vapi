@@ -18,12 +18,19 @@ const Page = async () => {
   return (
     <>
     <HeroSection />
-    <main className='pb-12'>
-      <h1 className='text-2xl underline text-center'>My Companions</h1>
+    <main className='my-12'>
+      {!userId && <h1 className='text-2xl underline text-center'>My Companions</h1>}
+      {userId && (
+        <div className='flex justify-between items-center'>
+          <h1 className='text-2xl underline'>My Companions</h1>
+          <Link href="/companions" className='btn-primary'>View All</Link>
+        </div>
+
+        )}
       <section className='home-section pb-8'>
         {userId ? (
           companions.length ? (
-            companions.map((companion) => (
+            companions.slice(0, 3).map((companion) => (
               <CompanionCard
                 key={companion.id}
                 { ...companion }

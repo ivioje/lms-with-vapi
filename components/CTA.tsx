@@ -21,7 +21,7 @@ const CTA = () => {
             width={362}
             height={232}
         />
-        <button className='btn-primary'>
+        <button className='btn-primary hover:bg-yellow-400 hover:text-gray-900 hover:border-black transition-all duration-300'>
             <Image src='/icons/plus.svg' alt='Plus Icon' width={12} height={12} />
             <Link href={'/companions/new'}>Build a New Companion</Link>
         </button>
