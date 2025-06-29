@@ -48,6 +48,7 @@ const CompanionsLibrary = async ({ searchParams }: SearchParams) => {
             {...companion} 
             color={getSubjectColor(companion.subject)}
             initialBookmarked={bookmarkedIds.has(companion.id)}
+            isOwner
           />
         ))}
         {companions.length === 0 && (

@@ -1,11 +1,12 @@
 'use client';
 
 import { useState } from "react";
-import { addBookmark, removeBookmark } from "@/lib/actions/companion.actions";
+import { addBookmark, removeBookmark, archiveCompanion, unarchiveCompanion, deleteCompanionPermanently } from "@/lib/actions/companion.actions";
 import Image from "next/image";
 import Link from "next/link";
-import { Loader2, X } from "lucide-react";
+import { ArchiveIcon, ArchiveRestore, Loader2, Trash, X } from "lucide-react";
 import toast from "react-hot-toast";
+import { useRouter } from 'next/navigation';
 
 interface CompanionCardProps {
   id: string;
@@ -15,12 +16,16 @@ interface CompanionCardProps {
   duration: number;
   color: string;
   initialBookmarked?: boolean;
+  isOwner?: boolean;
+  isArchived?: boolean;
 }
 
-const CompanionCard = ({ id, name, topic, duration, subject, color, initialBookmarked }: CompanionCardProps) => {
+const CompanionCard = ({ id, name, topic, duration, subject, color, initialBookmarked, isOwner = false, isArchived = false }: CompanionCardProps) => {
   const path = `/companions/${id}`;
   const [bookmarking, setBookmarking] = useState(false);
   const [isBookmarked, setIsBookmarked] = useState(initialBookmarked || false);
+  const [archiving, setArchiving] = useState(false);
+  const router = useRouter();
 
   const handleBookmark = async () => {
     setBookmarking(true);
@@ -46,16 +51,74 @@ const CompanionCard = ({ id, name, topic, duration, subject, color, initialBookm
     setBookmarking(false);
   };
 
+  const handleArchive = async () => {
+    if(archiving) return;
+    setArchiving(true);
+    try {
+      await archiveCompanion(id);
+      toast.success('Companion archived');
+      router.refresh();
+    } catch (e) {
+      console.error(e);
+      toast.error('Failed to archive');
+    }
+    setArchiving(false);
+  };
+
+  const handleRestore = async () => {
+    if(archiving) return;
+    setArchiving(true);
+    try {
+      await unarchiveCompanion(id);
+      toast.success('Companion restored');
+      router.refresh();
+    } catch(e) {
+      console.error(e);
+      toast.error('Failed to restore');
+    }
+    setArchiving(false);
+  };
+
+  const handleDelete = async () => {
+    if(archiving) return;
+    setArchiving(true);
+    try {
+      await deleteCompanionPermanently(id);
+      toast.success('Companion deleted');
+      router.refresh();
+    } catch(e){
+      console.error(e);
+      toast.error('Failed to delete');
+    }
+    setArchiving(false);
+  };
+
   return (
     <article className="companion-card" style={{ background: color }}>
       <div className="flex justify-between items-center">
         <div className="subject-badge">{subject}</div>
+        <div className="flex gap-2 justify-end">
+        {isArchived ? (
+            <div className="flex gap-2">
+              <button disabled={archiving} className="companion-bookmark" onClick={handleRestore}>
+                <ArchiveRestore size={15} className="text-white" />
+              </button>
+              <button disabled={archiving} className="companion-bookmark" onClick={handleDelete}>
+                <Trash size={15} className="text-white" />
+              </button>
+            </div>
+          ) : (
+            <button disabled={archiving} className="companion-bookmark" onClick={handleArchive}>
+              <ArchiveIcon size={15} className="text-white" />
+            </button>
+          )
+        }
         {isBookmarked ? (
           <button className="companion-bookmark" onClick={handleRemoveBookmark} disabled={bookmarking}>
             {bookmarking ? (
-              <Loader2 size={17} className="animate-spin text-white" />
+              <Loader2 size={15} className="animate-spin text-white" />
             ) : (
-              <X size={17} className="text-white" />
+              <X size={15} className="text-white" />
             )}
           </button>
         ) : (
@@ -70,8 +133,9 @@ const CompanionCard = ({ id, name, topic, duration, subject, color, initialBookm
                 height={5}
               />
             )}
-        </button>
-    )}
+          </button>
+        )}
+        </div>
       </div>
       <h2 className="text-2xl font-bold">{name}</h2>
       <p className="text-sm">{topic}</p>

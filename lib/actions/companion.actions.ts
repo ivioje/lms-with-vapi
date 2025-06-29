@@ -102,6 +102,7 @@ export const getUserCompanions = async (userId: string) => {
         .from('companions')
         .select()
         .eq('author', userId)
+        .eq('archived', false)
 
     if(error) throw new Error(error.message);
 

@@ -26,10 +26,11 @@ const ArchivesPage = async () => {
             {...companion}
             color={getSubjectColor(companion.subject)}
             initialBookmarked={bookmarkedIds.has(companion.id)}
+            isArchived
           />
         ))}
       </section>
-      <div className="mt-8 text-center">
+      <div className="mt-8 text-center flex justify-center">
         <Link href="/companions" className="btn-primary">Back to My Companions</Link>
       </div>
     </main>
