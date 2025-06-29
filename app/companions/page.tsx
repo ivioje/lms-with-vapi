@@ -42,7 +42,7 @@ const CompanionsLibrary = async ({ searchParams }: SearchParams) => {
         </div>
       </section>
       <section className="companions-grid">
-        {companions.map((companion) => (
+        {companions.length > 0 && companions.map((companion) => (
           <CompanionCard 
             key={companion.id} 
             {...companion} 
@@ -50,6 +50,9 @@ const CompanionsLibrary = async ({ searchParams }: SearchParams) => {
             initialBookmarked={bookmarkedIds.has(companion.id)}
           />
         ))}
+        {companions.length === 0 && (
+          <div className="text-center text-gray-500">No companions found</div>
+        )}
       </section>
     </main>
     </>

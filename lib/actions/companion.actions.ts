@@ -183,3 +183,60 @@ export const getBookmarkedCompanions = async (userId: string): Promise<Array<{ i
   }
   return data.map(({ companions }) => companions as unknown as { id: string });
 };
+
+// -------------------- Archives --------------------
+
+export const archiveCompanion = async (companionId: string) => {
+  const { userId } = await auth();
+  if (!userId) throw new Error('Not authenticated');
+
+  const supabase = createSupabaseClient();
+  const { error } = await supabase
+    .from('companions')
+    .update({ archived: true })
+    .eq('id', companionId)
+    .eq('author', userId);
+
+  if (error) throw new Error(error.message);
+};
+
+export const unarchiveCompanion = async (companionId: string) => {
+  const { userId } = await auth();
+  if (!userId) throw new Error('Not authenticated');
+
+  const supabase = createSupabaseClient();
+  const { error } = await supabase
+    .from('companions')
+    .update({ archived: false })
+    .eq('id', companionId)
+    .eq('author', userId);
+
+  if (error) throw new Error(error.message);
+};
+
+export const deleteCompanionPermanently = async (companionId: string) => {
+  const { userId } = await auth();
+  if (!userId) throw new Error('Not authenticated');
+
+  const supabase = createSupabaseClient();
+  const { error } = await supabase
+    .from('companions')
+    .delete()
+    .eq('id', companionId)
+    .eq('author', userId);
+
+  if (error) throw new Error(error.message);
+};
+
+export const getArchivedCompanions = async (userId: string) => {
+  const supabase = createSupabaseClient();
+  const { data, error } = await supabase
+    .from('companions')
+    .select()
+    .eq('author', userId)
+    .eq('archived', true);
+
+  if (error) throw new Error(error.message);
+
+  return data;
+};
