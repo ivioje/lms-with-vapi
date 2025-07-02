@@ -16,11 +16,10 @@ interface CompanionCardProps {
   duration: number;
   color: string;
   initialBookmarked?: boolean;
-  isOwner?: boolean;
   isArchived?: boolean;
 }
 
-const CompanionCard = ({ id, name, topic, duration, subject, color, initialBookmarked, isOwner = false, isArchived = false }: CompanionCardProps) => {
+const CompanionCard = ({ id, name, topic, duration, subject, color, initialBookmarked, isArchived = false }: CompanionCardProps) => {
   const path = `/companions/${id}`;
   const [bookmarking, setBookmarking] = useState(false);
   const [isBookmarked, setIsBookmarked] = useState(initialBookmarked || false);
