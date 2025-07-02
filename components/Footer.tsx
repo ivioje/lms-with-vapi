@@ -1,8 +1,13 @@
+"use client"
+
 import Image from 'next/image'
 import Link from 'next/link'
+import { usePathname } from "next/navigation";
 
 const Footer = () => {
   const currentYear = new Date().getFullYear()
+  const pathname = usePathname();
+  if (/^\/companions\/(?!new$)[^\/]+$/.test(pathname)) return null;
 
   
   return (
