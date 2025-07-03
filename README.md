@@ -65,20 +65,6 @@ Open <http://localhost:3000> in your browser and start building companions!
 
 ---
 
-## 🏗️ Project Structure (high-level)
-
-```
-lms-with-vapi/
-├─ app/                # Next.js app router (pages, routes, API)
-├─ components/         # Re-usable UI + companion components
-├─ lib/                # Supabase client, Vapi SDK, utility helpers
-├─ constants/          # Static data (subjects, colors, etc.)
-├─ public/             # Static assets (images, icons, video)
-└─ ...
-```
-
----
-
 ## 🛠️ Tech Stack
 
 | Layer            | Tech                                           |
