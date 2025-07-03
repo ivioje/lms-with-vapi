@@ -1,36 +1,93 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Converso – AI-Powered Learning Companions
 
-## Getting Started
+Converso is a real-time, AI-driven learning platform that lets students (from kindergarten all the way to high-school) build personalised **voice companions** that guide them through interactive lessons.
 
-First, run the development server:
+![Converso Hero](./public/images/hero.png)
+
+---
+
+## ✨ Key Features
+
+• **Custom Voice Companions** – Create tutors with their own name, avatar, subject focus, tone and duration.<br/>
+• **Real-time Conversation** – Powered by the [Vapi](https://vapi.ai) web SDK for low-latency voice chat.<br/>
+• **Auth & Profiles** – Secure user management via [Clerk](https://clerk.dev).<br/>
+• **Supabase Back-end** – Store companions, sessions and progress in a Postgres database with row-level security.<br/>
+• **Modern UI** – Built with Next.js App Router, Tailwind CSS and Shadcn UI.<br/>
+• **Analytics & Monitoring** – Error tracking and performance insights through Sentry (Edge + Server).
+
+---
+
+## 📹 Demo
+
+👉 **Watch the full walkthrough video:** [converso-screencast.mp4](./public/video/converso-screencast.mp4)
+
+---
+
+## 🚀 Getting Started
+
+### 1. Clone & Install
+
+```bash
+# clone
+git clone https://github.com/ivioje/lms-with-vapi.git
+cd lms-with-vapi
+
+# install deps
+npm install 
+```
+
+### 2. Environment Variables
+
+Create a `.env.local` file at the project root and populate the following keys:
+
+```bash
+# Supabase
+NEXT_PUBLIC_SUPABASE_URL=<your-supabase-url>
+NEXT_PUBLIC_SUPABASE_ANON_KEY=<your-supabase-anon-key>
+
+# Vapi (voice SDK)
+NEXT_PUBLIC_VAPI_WEB_TOKEN=<your-vapi-token>
+
+# Clerk (authentication)
+CLERK_SECRET_KEY=<server-secret>
+NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=<publishable-key>
+
+# (Optional) Sentry
+SENTRY_DSN=<your-sentry-dsn>
+```
+
+### 3. Run the Dev Server
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open <http://localhost:3000> in your browser and start building companions!
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+---
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## 🏗️ Project Structure (high-level)
 
-## Learn More
+```
+lms-with-vapi/
+├─ app/                # Next.js app router (pages, routes, API)
+├─ components/         # Re-usable UI + companion components
+├─ lib/                # Supabase client, Vapi SDK, utility helpers
+├─ constants/          # Static data (subjects, colors, etc.)
+├─ public/             # Static assets (images, icons, video)
+└─ ...
+```
 
-To learn more about Next.js, take a look at the following resources:
+---
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## 🛠️ Tech Stack
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+| Layer            | Tech                                           |
+|------------------|------------------------------------------------|
+| Front-end        | Next.js 15 • React 19 • TypeScript • Tailwind CSS |
+| UI Components    | Shadcn UI • Lucide Icons                         |
+| Auth             | Clerk (multi-tenant, social logins, plan subscription, billing etc.)       |
+| Back-end / DB    | Supabase (Postgres + Row Level Security)        |
+| Real-time Voice  | Vapi.ai Web SDK                                 |
+| Dev & Ops        | ESLint • Prettier • Sentry Monitoring           |
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
