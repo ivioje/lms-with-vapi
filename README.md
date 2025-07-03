@@ -1,8 +1,8 @@
-# Converso – AI-Powered Learning Companions
+# AI-Powered Learning Companions
 
-Converso is a real-time, AI-driven learning platform that lets students (from kindergarten all the way to high-school) build personalised **voice companions** that guide them through interactive lessons.
+A real-time, AI-driven learning platform that lets students (from kindergarten all the way to high-school) build personalised **voice companions** that guide them through interactive lessons.
 
-![Converso Hero](./public/images/hero.png)
+![Hero](./public/images/hero.png)
 
 ---
 
@@ -32,7 +32,6 @@ Converso is a real-time, AI-driven learning platform that lets students (from ki
 git clone https://github.com/ivioje/lms-with-vapi.git
 cd lms-with-vapi
 
-# install deps
 npm install 
 ```
 
